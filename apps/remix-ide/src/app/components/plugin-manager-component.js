@@ -53,7 +53,7 @@ const css = csjs`
   }
   .isStuck {
     background-color: var(--primary);
-    color: 
+    color:
   }
   .versionWarning {
     padding: 4px;
@@ -183,6 +183,27 @@ class PluginManagerComponent extends ViewPlugin {
       await this.appManager.activatePlugin(plugin.name)
     } catch (err) {
       // TODO : Use an alert to handle this error instead of a console.log
+      console.log(`Cannot create Plugin : ${err.message}`)
+      addToolTip(`Cannot create Plugin : ${err.message}`)
+    }
+  }
+
+  async reefNetworkPlugin () {
+    try {
+      const profile = {
+        displayName: "Reef network",
+        hash: "local-ReefNetwork",
+        icon: "assets/img/localPlugin.webp",
+        location: "sidePanel",
+        methods: ["reef network"],
+        name: "ReefNetwork",
+        type: "iframe",
+        url: "http://localhost:80" // TODO change the location of the plugin whent its published
+      };
+      const plugin = new IframePlugin(profile);
+      this.engine.register(plugin);
+      await this.appManager.activatePlugin(plugin.name);
+    } catch (err) {
       console.log(`Cannot create Plugin : ${err.message}`)
       addToolTip(`Cannot create Plugin : ${err.message}`)
     }
