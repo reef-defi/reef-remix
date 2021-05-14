@@ -491,4 +491,5 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
   framingService.start(params)
 
   if (params.embed) framingService.embed()
+  await pluginManagerComponent.reefNetworkPlugin();
 }
