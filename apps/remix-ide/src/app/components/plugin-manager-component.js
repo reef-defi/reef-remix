@@ -198,7 +198,7 @@ class PluginManagerComponent extends ViewPlugin {
         methods: ["reef network"],
         name: "ReefNetwork",
         type: "iframe",
-        url: "http://localhost:80" // TODO change the location of the plugin whent its published
+        url: "https://remix-plugin.reefscan.com/"
       };
       const plugin = new IframePlugin(profile);
       this.engine.register(plugin);
