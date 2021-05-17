@@ -407,17 +407,6 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
     registry.get('filemanager').api,
     contentImport
   )
-  const run = new RunTab(
-    blockchain,
-    registry.get('config').api,
-    registry.get('filemanager').api,
-    registry.get('editor').api,
-    filePanel,
-    registry.get('compilersartefacts').api,
-    networkModule,
-    mainview,
-    registry.get('fileproviders/browser').api
-  )
   const analysis = new AnalysisTab(registry)
   const debug = new DebuggerTab()
   const test = new TestTab(
@@ -431,7 +420,6 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
 
   engine.register([
     compileTab,
-    run,
     debug,
     analysis,
     test,
