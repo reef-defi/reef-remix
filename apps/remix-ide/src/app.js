@@ -205,19 +205,6 @@ async function run () {
   var self = this
 
   // check the origin and warn message
-  if (window.location.hostname === 'yann300.github.io') {
-    modalDialogCustom.alert('This UNSTABLE ALPHA branch of Remix has been moved to http://ethereum.github.io/remix-live-alpha.')
-  } else if (window.location.hostname === 'remix-alpha.ethereum.org' ||
-  (window.location.hostname === 'ethereum.github.io' && window.location.pathname.indexOf('/remix-live-alpha') === 0)) {
-    modalDialogCustom.alert('Welcome to the Remix alpha instance. Please use it to try out latest features. But use preferably https://remix.ethereum.org for any production work.')
-  } else if (window.location.protocol.indexOf('http') === 0 &&
-  window.location.hostname !== 'remix.ethereum.org' &&
-  window.location.hostname !== 'localhost' &&
-  window.location.hostname !== '127.0.0.1') {
-    modalDialogCustom.alert(`The Remix IDE has moved to http://remix.ethereum.org.\n
-This instance of Remix you are visiting WILL NOT BE UPDATED.\n
-Please make a backup of your contracts and start using http://remix.ethereum.org`)
-  }
   if (window.location.protocol.indexOf('https') === 0) {
     toolTip('You are using an `https` connection. Please switch to `http` if you are using Remix against an `http Web3 provider` or allow Mixed Content in your browser.')
   }
@@ -407,17 +394,6 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
     registry.get('filemanager').api,
     contentImport
   )
-  const run = new RunTab(
-    blockchain,
-    registry.get('config').api,
-    registry.get('filemanager').api,
-    registry.get('editor').api,
-    filePanel,
-    registry.get('compilersartefacts').api,
-    networkModule,
-    mainview,
-    registry.get('fileproviders/browser').api
-  )
   const analysis = new AnalysisTab(registry)
   const debug = new DebuggerTab()
   const test = new TestTab(
@@ -431,7 +407,6 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
 
   engine.register([
     compileTab,
-    run,
     debug,
     analysis,
     test,
