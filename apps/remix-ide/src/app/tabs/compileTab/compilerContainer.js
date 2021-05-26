@@ -467,7 +467,24 @@ class CompilerContainer {
       url = `${urlFromVersion(this.data.selectedVersion)}`
     }
 
-    this.data.allversions.forEach(build => {
+    // console.log(this.data.allversions);
+
+    this.data.allversions
+    .filter(({longVersion}) => {
+      if (!longVersion.includes("+")) {
+        return false;
+      }
+      let [v1, v2,] = longVersion
+        .slice(0, longVersion.indexOf("+"))
+        .split(".");
+
+      if (parseInt(v1) <= 0 && parseInt(v2) < 6) {
+        return false;
+      }
+
+      return true;
+    })
+    .forEach(build => {
       const option = build.path === this.data.selectedVersion
         ? yo`<option value="${build.path}" selected>${build.longVersion}</option>`
         : yo`<option value="${build.path}">${build.longVersion}</option>`
