@@ -191,7 +191,7 @@ class PluginManagerComponent extends ViewPlugin {
   async reefNetworkPlugin () {
     try {
       const profile = {
-        displayName: "Reef network",
+        displayName: "Deploy & Run",
         hash: "local-ReefNetwork",
         icon: "assets/img/deployAndRun.webp",
         location: "sidePanel",
