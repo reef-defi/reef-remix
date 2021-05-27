@@ -193,7 +193,7 @@ class PluginManagerComponent extends ViewPlugin {
       const profile = {
         displayName: "Reef network",
         hash: "local-ReefNetwork",
-        icon: "assets/img/localPlugin.webp",
+        icon: "assets/img/deployAndRun.webp",
         location: "sidePanel",
         methods: ["reef network"],
         name: "ReefNetwork",
