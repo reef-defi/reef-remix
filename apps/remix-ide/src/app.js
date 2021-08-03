@@ -325,7 +325,7 @@ async function run () {
   const hiddenPanel = new HiddenPanel()
   const pluginManagerComponent = new PluginManagerComponent(appManager, engine)
   const filePanel = new FilePanel(appManager)
-  const landingPage = new LandingPage(appManager, menuicons, fileManager, filePanel)
+  const landingPage = new LandingPage(appManager, menuicons, fileManager, filePanel, contentImport)
   const settings = new SettingsTab(
     registry.get('config').api,
     editor,
