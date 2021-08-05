@@ -81,16 +81,40 @@ contract Owner {
     }
 }`
 
+const erc20 = `// SPDX-License-Identifier: GPL-3.0
+
+pragma solidity >=0.7.0 <0.9.0;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+/**
+ * @title ERC20Contract
+ * @dev Very simple ERC20 Token example, where all tokens are pre-assigned to the creator.
+ * Note they can later distribute these tokens as they wish using transfer and other
+ * ERC20 functions.
+ * Based on https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v2.5.1/contracts/examples/SimpleToken.sol
+ */
+contract ERC20Contract is ERC20 {
+    /**
+     * @dev Constructor that gives msg.sender all of existing tokens.
+     */
+    constructor(
+        uint256 initialSupply
+    ) ERC20('ERC20Contract','ERC20C') {
+        _mint(msg.sender, initialSupply);
+    }
+}`
+
 const ballot = `// SPDX-License-Identifier: GPL-3.0
 
 pragma solidity >=0.7.0 <0.9.0;
 
-/** 
+/**
  * @title Ballot
  * @dev Implements voting process along with vote delegation
  */
 contract Ballot {
-   
+
     struct Voter {
         uint weight; // weight is accumulated by delegation
         bool voted;  // if true, that person already voted
@@ -99,7 +123,7 @@ contract Ballot {
     }
 
     struct Proposal {
-        // If you can limit the length to a certain number of bytes, 
+        // If you can limit the length to a certain number of bytes,
         // always use one of bytes1 to bytes32 because they are much cheaper
         bytes32 name;   // short name (up to 32 bytes)
         uint voteCount; // number of accumulated votes
@@ -111,7 +135,7 @@ contract Ballot {
 
     Proposal[] public proposals;
 
-    /** 
+    /**
      * @dev Create a new ballot to choose one of 'proposalNames'.
      * @param proposalNames names of proposals
      */
@@ -129,8 +153,8 @@ contract Ballot {
             }));
         }
     }
-    
-    /** 
+
+    /**
      * @dev Give 'voter' the right to vote on this ballot. May only be called by 'chairperson'.
      * @param voter address of voter
      */
@@ -193,7 +217,7 @@ contract Ballot {
         proposals[proposal].voteCount += sender.weight;
     }
 
-    /** 
+    /**
      * @dev Computes the winning proposal taking all previous votes into account.
      * @return winningProposal_ index of winning proposal in the proposals array
      */
@@ -209,7 +233,7 @@ contract Ballot {
         }
     }
 
-    /** 
+    /**
      * @dev Calls winningProposal() function to get the index of the winner contained in the proposals array and then
      * @return winnerName_ the name of the winner
      */
@@ -228,21 +252,21 @@ import "remix_tests.sol"; // this import is automatically injected by Remix.
 import "../contracts/3_Ballot.sol";
 
 contract BallotTest {
-   
+
     bytes32[] proposalNames;
-   
+
     Ballot ballotToTest;
     function beforeAll () public {
         proposalNames.push(bytes32("candidate1"));
         ballotToTest = new Ballot(proposalNames);
     }
-    
+
     function checkWinningProposal () public {
         ballotToTest.vote(0);
         Assert.equal(ballotToTest.winningProposal(), uint(0), "proposal at index 0 should be the winning proposal");
         Assert.equal(ballotToTest.winnerName(), bytes32("candidate1"), "candidate1 should be the winner name");
     }
-    
+
     function checkWinninProposalWithReturnValue () public view returns (bool) {
         return ballotToTest.winningProposal() == 0;
     }
@@ -252,24 +276,24 @@ const deployWithWeb3 = `// Right click on the script name and hit "Run" to execu
 (async () => {
     try {
         console.log('Running deployWithWeb3 script...')
-        
+
         const contractName = 'Storage' // Change this for other contract
         const constructorArgs = []    // Put constructor args (if any) here for your contract
-    
+
         // Note that the script needs the ABI which is generated from the compilation artifact.
         // Make sure contract is compiled and artifacts are generated
         const artifactsPath = \`browser/contracts/artifacts/\${contractName}.json\` // Change this for different path
 
         const metadata = JSON.parse(await remix.call('fileManager', 'getFile', artifactsPath))
         const accounts = await web3.eth.getAccounts()
-    
+
         let contract = new web3.eth.Contract(metadata.abi)
-    
+
         contract = contract.deploy({
             data: metadata.data.bytecode.object,
             arguments: constructorArgs
         })
-    
+
         const newContractInstance = await contract.send({
             from: accounts[0],
             gas: 1500000,
@@ -285,24 +309,24 @@ const deployWithEthers = `// Right click on the script name and hit "Run" to exe
 (async () => {
     try {
         console.log('Running deployWithEthers script...')
-    
+
         const contractName = 'Storage' // Change this for other contract
         const constructorArgs = []    // Put constructor args (if any) here for your contract
 
         // Note that the script needs the ABI which is generated from the compilation artifact.
         // Make sure contract is compiled and artifacts are generated
         const artifactsPath = \`browser/contracts/artifacts/\${contractName}.json\` // Change this for different path
-    
+
         const metadata = JSON.parse(await remix.call('fileManager', 'getFile', artifactsPath))
         // 'web3Provider' is a remix global variable object
         const signer = (new ethers.providers.Web3Provider(web3Provider)).getSigner()
-    
+
         let factory = new ethers.ContractFactory(metadata.abi, metadata.data.bytecode.object, signer);
-    
+
         let contract = await factory.deploy(...constructorArgs);
-    
+
         console.log('Contract Address: ', contract.address);
-    
+
         // The contract is NOT deployed yet; we must wait until it is mined
         await contract.deployed()
         console.log('Deployment successful.')
@@ -313,7 +337,7 @@ const deployWithEthers = `// Right click on the script name and hit "Run" to exe
 
 const readme = `REMIX EXAMPLE PROJECT
 
-Remix example project is present when Remix loads very first time or there are no files existing in the File Explorer. 
+Remix example project is present when Remix loads very first time or there are no files existing in the File Explorer.
 It contains 3 directories:
 
 1. 'contracts': Holds three contracts with different complexity level, denoted with number prefix in file name.
@@ -323,7 +347,7 @@ It contains 3 directories:
 SCRIPTS
 
 The 'scripts' folder contains example async/await scripts for deploying the 'Storage' contract.
-For the deployment of any other contract, 'contractName' and 'constructorArgs' should be updated (along with other code if required). 
+For the deployment of any other contract, 'contractName' and 'constructorArgs' should be updated (along with other code if required).
 Scripts have full access to the web3.js and ethers.js libraries.
 
 To run a script, right click on file name in the file explorer and click 'Run'. Remember, Solidity file must already be compiled.
@@ -335,6 +359,7 @@ module.exports = {
   storage: { name: 'contracts/1_Storage.sol', content: storage },
   owner: { name: 'contracts/2_Owner.sol', content: owner },
   ballot: { name: 'contracts/3_Ballot.sol', content: ballot },
+  erc20: { name: 'contracts/4_ERC20Contract.sol', content: erc20 },
   deployWithWeb3: { name: 'scripts/deploy_web3.js', content: deployWithWeb3 },
   deployWithEthers: { name: 'scripts/deploy_ethers.js', content: deployWithEthers },
   ballot_test: { name: 'tests/4_Ballot_test.sol', content: ballotTest },
