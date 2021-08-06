@@ -432,7 +432,6 @@ async function run () {
   engine.register([
     compileTab,
     compileTab.compileTabLogic,
-    run,
     debug,
     analysis,
     test,
