@@ -144,6 +144,7 @@ class CompileTab extends ViewPlugin {
       this.setCompileErrors(data)
       const {optimize, runs, currentVersion} = this.getCurrentCompilerConfig();
       const version = currentVersion;
+      // this._view.errorContainer.appendChild(yo`<span data-id="compilationFinishedWith_${version}"></span>`)
       if (success) {
         // forwarding the event to the appManager infra
         this.emit('compilationFinished', source.target, source, `${version};${optimize};${runs}`, data)
