@@ -9,7 +9,7 @@ COPY ./ /app/
 RUN npm install -g @nrwl/cli
 RUN npm install
 
-RUN nx build remix-ide --with-deps
+RUN nx build remix-ide --with-deps --output-hashing=all
 
 FROM nginx:latest
 COPY ./apps/remix-ide/nginx.conf /etc/nginx/nginx.conf
