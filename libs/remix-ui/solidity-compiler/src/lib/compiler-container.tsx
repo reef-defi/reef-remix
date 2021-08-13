@@ -510,7 +510,13 @@ export const CompilerContainer = (props: CompilerContainerProps) => {
               { state.allversions.length <= 0 && <option disabled data-id={state.selectedVersion === state.defaultVersion ? 'selected' : ''}>{ state.defaultVersion }</option> }
               { state.allversions.length <= 0 && <option disabled data-id={state.selectedVersion === 'builtin' ? 'selected' : ''}>builtin</option> }
               { state.customVersions.map((url, i) => <option key={i} data-id={state.selectedVersion === url ? 'selected' : ''} value={url}>custom</option>)}
-              { state.allversions.map((build, i) => {
+              { state.allversions
+              .filter((build) => {
+                if (build.path === "builtin") { return true; }
+                const [, v2,] = build.version.split(".");
+                return parseInt(v2) >= 6;
+              })
+              .map((build, i) => {
                 return _shouldBeAdded(build.longVersion)
                   ? <option key={i} value={build.path} data-id={state.selectedVersion === build.path ? 'selected' : ''}>{build.longVersion}</option>
                   : null
