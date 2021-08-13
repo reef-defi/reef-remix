@@ -509,6 +509,7 @@ async function run () {
     // activate solidity plugin
     await appManager.activatePlugin(['solidity', 'udapp'])
   }
+  menuicons.unlinkContent({name: 'udapp', kind: 'udapp'});
 
   // Load and start the service who manager layout and frame
   const framingService = new FramingService(sidePanel, menuicons, mainview, this._components.resizeFeature)
@@ -516,8 +517,8 @@ async function run () {
 
   if (params.embed) framingService.embed()
   framingService.start(params)
-
   menuicons.unlinkContent({name: 'udapp', kind: 'udapp'});
+
   await appManager.activatePlugin("reef");
   menuicons.unlinkContent({name: 'udapp', kind: 'udapp'});
 }
