@@ -214,7 +214,7 @@ async function run () {
     toolTip('You are using an `https` connection. Please switch to `http` if you are using Remix against an `http Web3 provider` or allow Mixed Content in your browser.')
   }
 
-  const hosts = ['127.0.0.1:8080', '192.168.0.101:8080', 'localhost:8080', 'https://remix-plugin.reefscan.com/']
+  const hosts = ['127.0.0.1:8080', '192.168.0.101:8080', 'localhost:8080']
   // workaround for Electron support
   if (!isElectron() && !hosts.includes(window.location.host)) {
     // Oops! Accidentally trigger refresh or bookmark.
@@ -439,7 +439,7 @@ async function run () {
     mainview,
     registry.get('fileproviders/browser').api
   )
-  const profile = {
+  const reefProfile = {
     displayName: "Deploy & Run",
     hash: "local-ReefNetwork",
     icon: "assets/img/deployAndRun.webp",
@@ -447,9 +447,9 @@ async function run () {
     methods: [],
     name: "reef",
     type: "iframe",
-    url: "https://remix-plugin.reefscan.com/"
+    url: "https://remix-plugin.reefscan.com/" // "http://localhost:8000/"
   };
-  const reef = new IframePlugin(profile);
+  const reef = new IframePlugin(reefProfile);
 
   engine.register([
     compileTab,
