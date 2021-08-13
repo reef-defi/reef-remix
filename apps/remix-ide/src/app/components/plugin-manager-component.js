@@ -188,27 +188,6 @@ class PluginManagerComponent extends ViewPlugin {
     }
   }
 
-  async reefNetworkPlugin () {
-    try {
-      const profile = {
-        displayName: "Deploy & Run",
-        hash: "local-ReefNetwork",
-        icon: "assets/img/deployAndRun.webp",
-        location: "sidePanel",
-        methods: ["reef network"],
-        name: "ReefNetwork",
-        type: "iframe",
-        url: "https://remix-plugin.reefscan.com/"
-      };
-      const plugin = new IframePlugin(profile);
-      this.engine.register(plugin);
-      await this.appManager.activatePlugin(plugin.name);
-    } catch (err) {
-      console.log(`Cannot create Plugin : ${err.message}`)
-      addToolTip(`Cannot create Plugin : ${err.message}`)
-    }
-  }
-
   render () {
     // Filtering helpers
     const isFiltered = (profile) => (profile.displayName ? profile.displayName : profile.name).toLowerCase().includes(this.filter)

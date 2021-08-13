@@ -17,7 +17,7 @@ import { HiddenPanel } from './app/components/hidden-panel'
 import { VerticalIcons } from './app/components/vertical-icons'
 import { LandingPage } from './app/ui/landing-page/landing-page'
 import { MainPanel } from './app/components/main-panel'
-
+import { IframePlugin } from '@remixproject/engine-web'
 import { OffsetToLineColumnConverter, CompilerMetadata, CompilerArtefacts, FetchAndCompile, CompilerImports } from '@remix-project/core-plugin'
 
 import migrateFileSystem from './migrateFileSystem'
@@ -325,7 +325,7 @@ async function run () {
   const hiddenPanel = new HiddenPanel()
   const pluginManagerComponent = new PluginManagerComponent(appManager, engine)
   const filePanel = new FilePanel(appManager)
-  const landingPage = new LandingPage(appManager, menuicons, fileManager, filePanel)
+  const landingPage = new LandingPage(appManager, menuicons, fileManager, filePanel, contentImport)
   const settings = new SettingsTab(
     registry.get('config').api,
     editor,
@@ -428,17 +428,41 @@ async function run () {
     appManager,
     contentImport
   )
+  const run = new RunTab(
+    blockchain,
+    registry.get('config').api,
+    registry.get('filemanager').api,
+    registry.get('editor').api,
+    filePanel,
+    registry.get('compilersartefacts').api,
+    networkModule,
+    mainview,
+    registry.get('fileproviders/browser').api
+  )
+  const profile = {
+    displayName: "Deploy & Run",
+    hash: "local-ReefNetwork",
+    icon: "assets/img/deployAndRun.webp",
+    location: "sidePanel",
+    methods: [],
+    name: "reef",
+    type: "iframe",
+    url: "https://remix-plugin.reefscan.com/"
+  };
+  const reef = new IframePlugin(profile);
 
   engine.register([
     compileTab,
     compileTab.compileTabLogic,
     debug,
     analysis,
+    run,
+    reef,
     test,
     filePanel.remixdHandle,
     filePanel.gitHandle,
     filePanel.hardhatHandle,
-    filePanel.slitherHandle
+    filePanel.slitherHandle,
   ])
 
   if (isElectron()) {
@@ -483,13 +507,18 @@ async function run () {
     }).catch(console.error)
   } else {
     // activate solidity plugin
-    appManager.activatePlugin(['solidity', 'udapp'])
+    await appManager.activatePlugin(['solidity', 'udapp'])
   }
+  menuicons.unlinkContent({name: 'udapp', kind: 'udapp'});
 
   // Load and start the service who manager layout and frame
   const framingService = new FramingService(sidePanel, menuicons, mainview, this._components.resizeFeature)
+  menuicons.unlinkContent({name: 'udapp', kind: 'udapp'});
 
   if (params.embed) framingService.embed()
   framingService.start(params)
-  await pluginManagerComponent.reefNetworkPlugin();
+  menuicons.unlinkContent({name: 'udapp', kind: 'udapp'});
+
+  await appManager.activatePlugin("reef");
+  menuicons.unlinkContent({name: 'udapp', kind: 'udapp'});
 }
