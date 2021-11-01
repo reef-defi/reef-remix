@@ -21,7 +21,7 @@ contract Storage {
     }
 
     /**
-     * @dev Return value 
+     * @dev Return value
      * @return value of 'number'
      */
     function retrieve() public view returns (uint256){
@@ -40,10 +40,10 @@ pragma solidity >=0.7.0 <0.9.0;
 contract Owner {
 
     address private owner;
-    
+
     // event for EVM logging
     event OwnerSet(address indexed oldOwner, address indexed newOwner);
-    
+
     // modifier to check if caller is owner
     modifier isOwner() {
         // If the first argument of 'require' evaluates to 'false', execution terminates and all
@@ -54,7 +54,7 @@ contract Owner {
         require(msg.sender == owner, "Caller is not owner");
         _;
     }
-    
+
     /**
      * @dev Set contract deployer as owner
      */
@@ -73,7 +73,7 @@ contract Owner {
     }
 
     /**
-     * @dev Return owner address 
+     * @dev Return owner address
      * @return address of owner
      */
     function getOwner() external view returns (address) {
@@ -81,7 +81,7 @@ contract Owner {
     }
 }`
 
-const erc20 = `// SPDX-License-Identifier: GPL-3.0
+const erc20 = `// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.7.0 <0.9.0;
 
@@ -94,14 +94,62 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
  * ERC20 functions.
  * Based on https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v2.5.1/contracts/examples/SimpleToken.sol
  */
-contract ERC20Contract is ERC20 {
+contract TestToken is ERC20 {
     /**
      * @dev Constructor that gives msg.sender all of existing tokens.
      */
-    constructor(
-        uint256 initialSupply
-    ) ERC20('ERC20Contract','ERC20C') {
+    constructor(uint256 initialSupply) ERC20("My Test Token","TEST") {
         _mint(msg.sender, initialSupply);
+    }
+}`
+
+
+const nft721 = `// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+
+contract TestNFT is ERC721URIStorage {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
+
+    constructor() ERC721("My test NFT", "TEST") {}
+
+    function awardItem(address player, string memory tokenURI)
+        public
+        returns (uint256)
+    {
+        _tokenIds.increment();
+
+        uint256 newItemId = _tokenIds.current();
+        _mint(player, newItemId);
+        _setTokenURI(newItemId, tokenURI);
+
+        return newItemId;
+    }
+}`
+
+const nft1155 = `// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+
+contract TestNFT is ERC1155 {
+    uint256 public constant GOLD = 0;
+    uint256 public constant SILVER = 1;
+    uint256 public constant THORS_HAMMER = 2;
+    uint256 public constant SWORD = 3;
+    uint256 public constant SHIELD = 4;
+
+    constructor() ERC1155("https://game.example/api/item/{id}.json") {
+        _mint(msg.sender, GOLD, 10**18, "");
+        _mint(msg.sender, SILVER, 10**27, "");
+        _mint(msg.sender, THORS_HAMMER, 1, "");
+        _mint(msg.sender, SWORD, 10**9, "");
+        _mint(msg.sender, SHIELD, 10**9, "");
     }
 }`
 
@@ -359,9 +407,11 @@ module.exports = {
   storage: { name: 'contracts/1_Storage.sol', content: storage },
   owner: { name: 'contracts/2_Owner.sol', content: owner },
   ballot: { name: 'contracts/3_Ballot.sol', content: ballot },
-  erc20: { name: 'contracts/4_ERC20Contract.sol', content: erc20 },
-  deployWithWeb3: { name: 'scripts/deploy_web3.js', content: deployWithWeb3 },
-  deployWithEthers: { name: 'scripts/deploy_ethers.js', content: deployWithEthers },
+  erc20: { name: 'contracts/4_Token_ERC20.sol', content: erc20 },
+  nft721: { name: 'contracts/5_NFT_ERC721.sol', content: nft721 },
+  nft1155: { name: 'contracts/6_NFT_ERC1155.sol', content: nft1155 },
+  // deployWithWeb3: { name: 'scripts/deploy_web3.js', content: deployWithWeb3 },
+  // deployWithEthers: { name: 'scripts/deploy_ethers.js', content: deployWithEthers },
   ballot_test: { name: 'tests/4_Ballot_test.sol', content: ballotTest },
   readme: { name: 'README.txt', content: readme }
 }
